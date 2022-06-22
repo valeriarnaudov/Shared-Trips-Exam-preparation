@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 require("../models/User");
+require("../models/Trip");
 
-const dbName = 'sharedtrips';
+const dbName = "sharedtrips";
 const connectionString = "mongodb://localhost:27017/" + dbName;
 
 module.exports = async (app) => {
