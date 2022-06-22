@@ -4,52 +4,56 @@ const mapErrors = require("../util/mappers");
 
 const router = require("express").Router();
 
-router.get("/register",isGuest(), (req, res) => {
+router.get("/register", isGuest(), (req, res) => {
     res.render("register");
 });
 
-//TODO check form action, method, fieldnames
-router.post("/register",isGuest(), async (req, res) => {
+router.post("/register", isGuest(), async (req, res) => {
     try {
+        if (req.body.password.trim() == "") {
+            throw new Error("Password is required");
+        }
         if (req.body.password != req.body.repass) {
             throw new Error("Passwords do not match");
         }
-        const user = await register(req.body.username, req.body.password);
+        const user = await register(
+            req.body.email,
+            req.body.password,
+            req.body.gender
+        );
 
         req.session.user = user;
-        res.redirect("/"); //TODO check redirect required
+        res.redirect("/");
     } catch (error) {
-        //TODO send error messages
         const errors = mapErrors(error);
-        res.render("/register", {
-            data: { username: req.body.username },
+        const isMale = req.body.gender = 'male'
+        res.render("register", {
+            data: { email: req.body.email, isMale },
             errors,
         });
     }
 });
 
-router.get("/login",isGuest(), (req, res) => {
+router.get("/login", isGuest(), (req, res) => {
     res.render("login");
 });
 
-//TODO check form action, method, fieldnames
-router.post("/login",isGuest(), async (req, res) => {
+router.post("/login", isGuest(), async (req, res) => {
     try {
-        const user = await login(req.body.username, req.body.password);
+        const user = await login(req.body.email, req.body.password);
         req.session.user = user;
-        res.redirect("/"); //TODO check redirect required
+        res.redirect("/");
     } catch (error) {
-        //TODO send error messages
         const errors = mapErrors(error);
 
-        res.render("/login", {
-            data: { username: req.body.username },
+        res.render("login", {
+            data: { email: req.body.email },
             errors,
         });
     }
 });
 
-router.get("/logout",isUser(), (req, res) => {
+router.get("/logout", isUser(), (req, res) => {
     delete req.session.user;
     res.redirect("/");
 });

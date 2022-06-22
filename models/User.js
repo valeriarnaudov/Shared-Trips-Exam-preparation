@@ -1,10 +1,9 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, Types:{ObjectId} } = require("mongoose");
 
-//TODO change user model
 //TODO add validation
 
 const userSchema = new Schema({
-    username: {
+    email: {
         type: String,
         required: [true, "Username is required"],
     },
@@ -12,10 +11,19 @@ const userSchema = new Schema({
         type: String,
         required: [true, "Password is required"],
     },
+    gender: {
+        type: String,
+        required: [true, "Gender is required"],
+    },
+    trips: {
+        type: [ObjectId],
+        ref: 'Trip',
+        default: [],
+    }
 });
 
 userSchema.index(
-    { username: 1 },
+    { email: 1 },
     { unique: true, collation: { locale: "en", strength: "2" } }
 );
 
