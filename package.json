@@ -1,0 +1,30 @@
+{
+  "name": "shared-trips-exam-preparation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valeriarnaudov/Shared-Trips-Exam-preparation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/valeriarnaudov/Shared-Trips-Exam-preparation/issues"
+  },
+  "homepage": "https://github.com/valeriarnaudov/Shared-Trips-Exam-preparation#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.1",
+    "express-handlebars": "^6.0.6",
+    "jsonwebtoken": "^8.5.1"
+  }
+}
