@@ -1,4 +1,5 @@
-const { isUser } = require("../middleware/guards");
+const { isUser, isOwner } = require("../middleware/guards");
+const preload = require("../middleware/preload");
 const { createTrip } = require("../services/trip");
 const mapErrors = require("../util/mappers");
 
@@ -33,6 +34,10 @@ router.post("/create", isUser(), async (req, res) => {
             errors,
         });
     }
+});
+
+router.get('/edit/:id', preload(), isOwner(), (req, res) => {
+    res.render('edit', { title: `Edit Trip`, trip: res.locals.trip });
 });
 
 module.exports = router;

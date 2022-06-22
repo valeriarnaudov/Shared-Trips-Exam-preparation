@@ -1,10 +1,14 @@
-const tripService = require('../services/trip');
+const tripService = require("../services/trip");
 
-function preload(Collection) {
+function preload(populate) {
     return async function (req, res, next) {
         const id = req.params.id;
-        const trip = await tripService.getTripById(id);
-        res.locals.trip = trip;
+
+        if (populate) {
+            res.locals.trip = await tripService.getTripAndUsers(id);
+        } else {
+            res.locals.trip = await tripService.getTripById(id);
+        }
 
         next();
     };
