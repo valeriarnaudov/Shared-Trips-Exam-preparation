@@ -37,6 +37,16 @@ async function deleteById(id) {
     await Trip.findByIdAndDelete(id);
 }
 
+async function joinTrip(tripId, userId) {
+    const trip = await Trip.findById(tripId);
+    if (trip.buddies.includes(userId)) {
+        throw new Error("You are already in this trip");
+    }
+
+    trip.buddies.push(userId);
+    await trip.save();
+}
+
 module.exports = {
     createTrip,
     getTripById,
@@ -44,4 +54,5 @@ module.exports = {
     getTripAndUsers,
     updateTrip,
     deleteById,
+    joinTrip,
 };
