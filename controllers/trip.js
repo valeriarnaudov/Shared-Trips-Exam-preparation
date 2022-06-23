@@ -1,6 +1,6 @@
 const { isUser, isOwner } = require("../middleware/guards");
 const preload = require("../middleware/preload");
-const { createTrip } = require("../services/trip");
+const { createTrip, updateTrip, deleteById } = require("../services/trip");
 const mapErrors = require("../util/mappers");
 
 const router = require("express").Router();
@@ -14,17 +14,18 @@ router.post("/create", isUser(), async (req, res) => {
         start: req.body.start,
         end: req.body.end,
         date: req.body.date,
+        time: req.body.time,
         carImg: req.body.carImg,
         carBrand: req.body.carBrand,
-        seats: req.body.seats,
-        price: req.body.price,
+        seats: Number(req.body.seats),
+        price: Number(req.body.price),
         description: req.body.description,
         owner: req.session.user._id,
-    }
+    };
 
     try {
         await createTrip(trip);
-        
+
         res.redirect("/trips");
     } catch (error) {
         const errors = mapErrors(error);
@@ -36,8 +37,42 @@ router.post("/create", isUser(), async (req, res) => {
     }
 });
 
-router.get('/edit/:id', preload(), isOwner(), (req, res) => {
-    res.render('edit', { title: `Edit Trip`, trip: res.locals.trip });
+router.get("/edit/:id", preload(), isOwner(), (req, res) => {
+    res.render("edit", { title: `Edit Trip`, trip: res.locals.trip });
+});
+
+router.post("/edit/:id", preload(), isOwner(), async (req, res) => {
+    const id = req.params.id;
+    const trip = {
+        start: req.body.start,
+        end: req.body.end,
+        date: req.body.date,
+        time: req.body.time,
+        carImg: req.body.carImg,
+        carBrand: req.body.carBrand,
+        seats: Number(req.body.seats),
+        price: Number(req.body.price),
+        description: req.body.description,
+        owner: req.session.user._id,
+    };
+
+    try {
+        await updateTrip(id, trip);
+        res.redirect("/trips/" + id);
+    } catch (error) {
+        const errors = mapErrors(error);
+        trip._id = id;
+
+        res.render("edit", {
+            trip,
+            errors,
+        });
+    }
+});
+
+router.delete("/delete/:id", preload(), isOwner(), async (req, res) => {
+    await deleteById(req.params.id);
+    res.redirect("/trips");
 });
 
 module.exports = router;
