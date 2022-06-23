@@ -1,8 +1,13 @@
 const Trip = require("../models/Trip");
+const User = require("../models/User");
 
 async function createTrip(trip) {
-    const newTrip = new Trip(trip);
-    return await newTrip.save();
+    const result = new Trip(trip);
+    await result.save();
+
+    const user = await User.findById(result.owner);
+    user.trips.push(result._id);
+    await user.save();
 }
 
 async function getTripById(id) {
