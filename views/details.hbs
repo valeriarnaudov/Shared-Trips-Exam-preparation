@@ -17,12 +17,11 @@
             <h5>Shared trip Buddies</h5>
             <div>
                 <p>
-                    {{#each buddiesList}}
+                    {{#if buddiesList}}
                     {{buddiesList}}
                     {{else}}
-
                     there are no buddies yet...
-                    {{/each}}
+                    {{/if}}
                 </p>
             </div>
             <h5>Driver: <span>{{owner.email}}</span> </h5>
