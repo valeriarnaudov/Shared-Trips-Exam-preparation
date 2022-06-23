@@ -10,8 +10,8 @@ router.get("/register", isGuest(), (req, res) => {
 
 router.post("/register", isGuest(), async (req, res) => {
     try {
-        if (req.body.password.trim() == "") {
-            throw new Error("Password is required");
+        if (req.body.password.trim().lenght < 4) {
+            throw new Error("Password must be at least 4 characters long");
         }
         if (req.body.password != req.body.repass) {
             throw new Error("Passwords do not match");
@@ -26,7 +26,7 @@ router.post("/register", isGuest(), async (req, res) => {
         res.redirect("/");
     } catch (error) {
         const errors = mapErrors(error);
-        const isMale = req.body.gender = 'male'
+        const isMale = (req.body.gender = "male");
         res.render("register", {
             data: { email: req.body.email, isMale },
             errors,

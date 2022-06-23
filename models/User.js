@@ -1,11 +1,19 @@
-const { Schema, model, Types:{ObjectId} } = require("mongoose");
+const {
+    Schema,
+    model,
+    Types: { ObjectId },
+} = require("mongoose");
 
-//TODO add validation
+const EMAIL_PATTERN = /^([a-zA-Z0-9]+)@([a-zA-Z0-9]+)\.([a-zA-Z0-9]+)$/;
 
 const userSchema = new Schema({
     email: {
         type: String,
         required: [true, "Username is required"],
+        validate: {
+            validator: (email) => EMAIL_PATTERN.test(email),
+            message: "Invalid email",
+        },
     },
     hashedPassword: {
         type: String,
@@ -14,12 +22,13 @@ const userSchema = new Schema({
     gender: {
         type: String,
         required: [true, "Gender is required"],
+        enum: ["male", "female"],
     },
     trips: {
         type: [ObjectId],
-        ref: 'Trip',
+        ref: "Trip",
         default: [],
-    }
+    },
 });
 
 userSchema.index(
@@ -27,6 +36,6 @@ userSchema.index(
     { unique: true, collation: { locale: "en", strength: "2" } }
 );
 
-const User = model('User', userSchema);
+const User = model("User", userSchema);
 
 module.exports = User;
