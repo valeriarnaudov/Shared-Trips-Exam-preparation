@@ -1,5 +1,6 @@
+const { isUser } = require("../middleware/guards");
 const preload = require("../middleware/preload");
-const { getAllTrips } = require("../services/trip");
+const { getAllTrips, getTripsByUser } = require("../services/trip");
 
 const router = require("express").Router();
 
@@ -16,7 +17,7 @@ router.get("/trips", async (req, res) => {
 router.get("/trips/:id", preload(true), async (req, res) => {
     const trip = res.locals.trip;
     trip.remainingSeats = trip.seats - trip.buddies.length;
-    trip.buddiesList = trip.buddies.map(buddy => buddy.email).join(", ");
+    trip.buddiesList = trip.buddies.map((buddy) => buddy.email).join(", ");
 
     if (req.session.user) {
         trip.hasUser = true;
@@ -28,6 +29,13 @@ router.get("/trips/:id", preload(true), async (req, res) => {
     }
 
     res.render("details", { title: `Trip details` });
+});
+
+router.get("/profile", isUser(), async (req, res) => {
+    const tripsByUser = await getTripsByUser(req.locals.user._id);
+    res.locals.user.tripCount = tripsByUser.length;
+    res.locals.user.trips = tripsByUser;
+    res.render("profile", { title: "Profile Page" });
 });
 
 module.exports = router;
