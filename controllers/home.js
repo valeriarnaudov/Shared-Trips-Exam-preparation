@@ -16,6 +16,7 @@ router.get("/trips", async (req, res) => {
 router.get("/trips/:id", preload(true), async (req, res) => {
     const trip = res.locals.trip;
     trip.remainingSeats = trip.seats - trip.buddies.length;
+    trip.buddiesList = trip.buddies.map(buddy => buddy.email).join(", ");
 
     if (req.session.user) {
         trip.hasUser = true;
